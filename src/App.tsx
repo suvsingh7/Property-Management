@@ -22,6 +22,7 @@ import{
   StarOutlineRounded,
   VillaOutlined
 } from "@mui/icons-material"
+import Dashboard from "@mui/icons-material/Dashboard";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import GlobalStyles from "@mui/material/GlobalStyles";
@@ -173,6 +174,13 @@ function App() {
                 routerProvider={routerBindings}
                 authProvider={authProvider}
                 resources={[
+
+                  {
+                    name: "dashboard",
+                    list: "/home",
+                    icon: <Dashboard/>
+                  },
+
                   {
                     name: "Property",
                     list: "/all_properties",
@@ -258,8 +266,8 @@ function App() {
                       index
                       element={<NavigateToResource resource="blog_posts" />}
                     />
-                    <Route path="/blog-posts">
-                      <Route index element={<BlogPostList />} />
+                    <Route path="/dasboard">
+                      <Route index element={<Dashboard />} />
                       <Route path="create" element={<BlogPostCreate />} />
                       <Route path="edit/:id" element={<BlogPostEdit />} />
                       <Route path="show/:id" element={<BlogPostShow />} />
