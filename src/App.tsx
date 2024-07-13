@@ -12,7 +12,16 @@ import {
   notificationProvider,
   RefineSnackbarProvider,
   ThemedLayoutV2,
+  ThemedTitleV2,
 } from "@refinedev/mui";
+import{
+  AccountCircleOutlined,
+  ChatBubbleOutline,
+  Home,
+  PeopleAltOutlined,
+  StarOutlineRounded,
+  VillaOutlined
+} from "@mui/icons-material"
 
 import CssBaseline from "@mui/material/CssBaseline";
 import GlobalStyles from "@mui/material/GlobalStyles";
@@ -25,23 +34,42 @@ import routerBindings, {
 import dataProvider from "@refinedev/simple-rest";
 import axios from "axios";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import { Header } from "./components/header";
+import { Header } from "./components/layout/header";
+//import { Layout } from "./components/sider";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 import { CredentialResponse } from "./interfaces/google";
-import {
-  BlogPostCreate,
-  BlogPostEdit,
-  BlogPostList,
-  BlogPostShow,
-} from "./pages/blog-posts";
-import {
-  CategoryCreate,
-  CategoryEdit,
-  CategoryList,
-  CategoryShow,
-} from "./pages/categories";
-import { Login } from "./pages/login";
+ import {
+   BlogPostCreate,
+   BlogPostEdit,
+   BlogPostList,
+   BlogPostShow,
+ } from "./pages/blog-posts";
+ import {
+   CategoryCreate,
+   CategoryEdit,
+   CategoryList,
+   CategoryShow,
+ } from "./pages/categories";
+
+  import {
+  agentProfile,
+  Agents,
+  allProperties,
+  createProperty,
+  home,
+  Login,
+  myProfile,
+  propertyDetails,
+  editProperty,
+} from "./pages";
+
+//import { Login } from "./pages/login";
 import { parseJwt } from "./utils/parse-jwt";
+import { Sider } from "./components/layout/sider";
+import { Layout } from "./components/layout/layout";
+import agent from "./pages/agent";
+import Agent from "./pages/agent";
+import Myprofile from "./pages/myprofile";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
@@ -146,25 +174,51 @@ function App() {
                 authProvider={authProvider}
                 resources={[
                   {
-                    name: "blog_posts",
-                    list: "/blog-posts",
-                    create: "/blog-posts/create",
-                    edit: "/blog-posts/edit/:id",
-                    show: "/blog-posts/show/:id",
-                    meta: {
-                      canDelete: true,
-                    },
+                    name: "Property",
+                    list: "/all_properties",
+                    icon: <VillaOutlined/>
+                    // create: "/blog-posts/create",
+                    // edit: "/blog-posts/edit/:id",
+                    // show: "/blog-posts/show/:id",
+                    // meta: {
+                    //   canDelete: true,
+                    // },
                   },
+
                   {
-                    name: "categories",
-                    list: "/categories",
-                    create: "/categories/create",
-                    edit: "/categories/edit/:id",
-                    show: "/categories/show/:id",
-                    meta: {
-                      canDelete: true,
-                    },
+                    name: "agent",
+                    list: "/agent",
+                    icon: <PeopleAltOutlined/>
                   },
+
+                  {
+                    name: "review",
+                    list: "/home",
+                    icon: <StarOutlineRounded/>
+                  },
+
+                  {
+                    name: "message",
+                    list: "/blog-posts",
+                    icon: <ChatBubbleOutline/>
+                  },
+
+                  {
+                    name: "myprofile",
+                    options:{label:'My Profile'},
+                    list: "/myprofile",
+                    icon: <AccountCircleOutlined/>
+                  },
+                  // {
+                  //   name: "categories",
+                  //   list: "/categories",
+                  //   create: "/categories/create",
+                  //   edit: "/categories/edit/:id",
+                  //   show: "/categories/show/:id",
+                  //   meta: {
+                  //     canDelete: true,
+                  //   },
+                  // },
                 ]}
                 options={{
                   syncWithLocation: true,
@@ -172,6 +226,15 @@ function App() {
                   useNewQueryKeys: true,
                   projectId: "BvpeV3-xvgj98-jUY8EE",
                 }}
+
+                // Title={Title}
+                //     Sider={Sider}
+                //     Layout={Layout}
+                //     Header={Header}
+                //     RouterProvider={routerProvider}
+                //     AuthProvider={authProvider}
+                //     LoginPage={Login}
+                //     DashboardPage={Home}
               >
                 <Routes>
                   <Route
@@ -180,9 +243,14 @@ function App() {
                         key="authenticated-inner"
                         fallback={<CatchAllNavigate to="/login" />}
                       >
-                        <ThemedLayoutV2 Header={Header}>
-                          <Outlet />
-                        </ThemedLayoutV2>
+                        <ThemedLayoutV2
+                    Title={(props) => (
+                      <ThemedTitleV2 {...props} 
+                      text="Yariga" />
+                    )}
+                  >
+                    <Outlet />
+                  </ThemedLayoutV2>
                       </Authenticated>
                     }
                   >
@@ -201,6 +269,30 @@ function App() {
                       <Route path="create" element={<CategoryCreate />} />
                       <Route path="edit/:id" element={<CategoryEdit />} />
                       <Route path="show/:id" element={<CategoryShow />} />
+                    </Route>
+                    <Route path="/agent">
+                      <Route index element={<Agent />} />
+                      <Route path="create" element={<BlogPostCreate />} />
+                      <Route path="edit/:id" element={<BlogPostEdit />} />
+                      <Route path="show/:id" element={<BlogPostShow />} />
+                    </Route>
+                    <Route path="/myprofile">
+                      <Route index element={<Myprofile />} />
+                      <Route path="create" element={<BlogPostCreate />} />
+                      <Route path="edit/:id" element={<BlogPostEdit />} />
+                      <Route path="show/:id" element={<BlogPostShow />} />
+                    </Route>
+                    <Route path="/blog-posts">
+                      <Route index element={<BlogPostList />} />
+                      <Route path="create" element={<BlogPostCreate />} />
+                      <Route path="edit/:id" element={<BlogPostEdit />} />
+                      <Route path="show/:id" element={<BlogPostShow />} />
+                    </Route>
+                    <Route path="/blog-posts">
+                      <Route index element={<BlogPostList />} />
+                      <Route path="create" element={<BlogPostCreate />} />
+                      <Route path="edit/:id" element={<BlogPostEdit />} />
+                      <Route path="show/:id" element={<BlogPostShow />} />
                     </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
